@@ -60,3 +60,69 @@ export async function createMenuItems(restaurantId, items) {
     );
   }
 }
+
+export async function getRestaurants() {
+  const response = await fetch(`${API_BASE}/api/restaurants`);
+  if (!response.ok) {
+    throw new Error(`Failed to fetch restaurants (${response.status})`);
+  }
+  return response.json();
+}
+
+export async function getMenusByRestaurant(restaurantId) {
+  const response = await fetch(
+    `${API_BASE}/api/menus?restaurant_id=${restaurantId}`,
+  );
+  if (!response.ok) {
+    throw new Error(`Failed to fetch menus (${response.status})`);
+  }
+  return response.json();
+}
+
+export async function deleteRestaurant(id) {
+  const response = await fetch(`${API_BASE}/api/restaurants/${id}`, {
+    method: "DELETE",
+  });
+  if (!response.ok) {
+    throw new Error(`Failed to delete restaurant (${response.status})`);
+  }
+}
+
+export async function deleteMenuItem(id) {
+  const response = await fetch(`${API_BASE}/api/menus/items/${id}`, {
+    method: "DELETE",
+  });
+  if (!response.ok) {
+    throw new Error(`Failed to delete menu item (${response.status})`);
+  }
+}
+
+export async function updateRestaurant(id, payload) {
+  const response = await fetch(`${API_BASE}/api/restaurants/${id}`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+  });
+  if (!response.ok) {
+    const errorText = await response.text();
+    throw new Error(
+      `Failed to update restaurant (${response.status}): ${errorText || "Unknown error"}`,
+    );
+  }
+  return response.json();
+}
+
+export async function updateMenuItem(id, payload) {
+  const response = await fetch(`${API_BASE}/api/menus/items/${id}`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+  });
+  if (!response.ok) {
+    const errorText = await response.text();
+    throw new Error(
+      `Failed to update menu item (${response.status}): ${errorText || "Unknown error"}`,
+    );
+  }
+  return response.json();
+}
