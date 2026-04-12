@@ -42,6 +42,13 @@ const doualaAreas = [
   'Youpwe'
 ]
 
+const initialMenuItem = {
+  menuName: '',
+  description: '',
+  price: '',
+  is_available: true
+}
+
 const initialFormData = {
   restaurantName: '',
   cuisine: '',
@@ -51,11 +58,7 @@ const initialFormData = {
   deliveryTimeMinutes: '',
   is_open: true,
   address: '',
-  manualAddress: '',
-  menuName: '',
-  description: '',
-  price: '',
-  is_available: true
+  manualAddress: ''
 }
 
 function App() {
@@ -63,6 +66,24 @@ function App() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitMessage, setSubmitMessage] = useState('')
   const [formData, setFormData] = useState(initialFormData)
+  const [menuItems, setMenuItems] = useState([{ ...initialMenuItem }])
+
+  const handleMenuItemChange = (index, event) => {
+    const { name, value, type, checked } = event.target
+    setMenuItems((prev) =>
+      prev.map((item, i) =>
+        i === index ? { ...item, [name]: type === 'checkbox' ? checked : value } : item
+      )
+    )
+  }
+
+  const addMenuItem = () => {
+    setMenuItems((prev) => [...prev, { ...initialMenuItem }])
+  }
+
+  const removeMenuItem = (index) => {
+    setMenuItems((prev) => prev.filter((_, i) => i !== index))
+  }
 
   const handleChange = (event) => {
     const { name, value, type, checked, files } = event.target
@@ -130,15 +151,18 @@ function App() {
         const imageUrl = await uploadImage()
 
         const restaurantPayload = {
-          restaurantName: formData.restaurantName,
+          restaurant_name: formData.restaurantName,
           cuisine: formData.cuisine,
           rating: Number(formData.rating),
           address: formData.address === 'Other' ? formData.manualAddress : formData.address,
           delivery_fee: Number(formData.deliveryFee),
           delivery_time_minutes: Number(formData.deliveryTimeMinutes),
           is_open: formData.is_open,
-          imageUrl
+          image_url: imageUrl
         }
+
+        console.log('Restaurant payload:', restaurantPayload)
+        console.log('Menu items submitted:', menuItems)
 
         // STEP 1: Post restaurant to your backend. Replace URL with your real endpoint.
         // Expected response: { id: <restaurant_id>, ...rest }
@@ -150,7 +174,8 @@ function App() {
         console.log('Restaurant response status:', restaurantResponse.status)
 
         if (!restaurantResponse.ok) {
-          throw new Error('Failed to save restaurant')
+          const errorText = await restaurantResponse.text()
+          throw new Error(`Failed to save restaurant (${restaurantResponse.status}): ${errorText || 'Unknown server error'}`)
         }
 
         const restaurantData = await restaurantResponse.json()
@@ -158,29 +183,32 @@ function App() {
         console.log('Restaurant ID:', restaurantId)
 
 
-        const menuPayload = {
-          restaurant_id: restaurantId,
-          menuName: formData.menuName,
-          description: formData.description,
-          price: Number(formData.price),
-          is_available: formData.is_available
+        // STEP 2: Post all menu items linked to the restaurant via restaurant_id.
+        const menuResults = await Promise.all(
+          menuItems.map((item) =>
+            fetch('http://localhost:5000/api/menus', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                restaurant_id: restaurantId,
+                menu_name: item.menuName,
+                description: item.description,
+                price: Number(item.price),
+                is_available: item.is_available
+              })
+            })
+          )
+        )
+
+        const failedMenu = menuResults.find((r) => !r.ok)
+        if (failedMenu) {
+          const menuErrorText = await failedMenu.text()
+          throw new Error(`Failed to save one or more menu items (${failedMenu.status}): ${menuErrorText || 'Unknown server error'}`)
         }
 
-        // STEP 2: Post menu linked to the restaurant via restaurant_id.
-        // Replace URL with your real endpoint.
-        const menuResponse = await fetch('http://localhost:5000/api/menus', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(menuPayload)
-        })
-
-        if (!menuResponse.ok) {
-          throw new Error('Failed to save menu')
-        }
-
-        console.log('Restaurant payload:', restaurantPayload)
-        console.log('Menu payload:', menuPayload)
+        
         setFormData(initialFormData)
+        setMenuItems([{ ...initialMenuItem }])
         setShowForm(false)
         setSubmitMessage('')
       } catch (error) {
@@ -331,49 +359,72 @@ function App() {
               </div>
 
               <hr className="section-divider" />
-              <h3 className="section-heading">Menu Details</h3>
-
-              <label htmlFor="menuName">Menu Name</label>
-              <input
-                id="menuName"
-                name="menuName"
-                type="text"
-                value={formData.menuName}
-                onChange={handleChange}
-                required
-              />
-
-              <label htmlFor="description">Description</label>
-              <textarea
-                id="description"
-                name="description"
-                rows={3}
-                value={formData.description}
-                onChange={handleChange}
-                required
-              />
-
-              <label htmlFor="price">Price (XAF)</label>
-              <input
-                id="price"
-                name="price"
-                type="number"
-                min="0"
-                step="1"
-                value={formData.price}
-                onChange={handleChange}
-                required
-              />
-              <div className="checkbox-row">
-                <input
-                  id="is_available"
-                  name="is_available"
-                  type="checkbox"
-                  checked={formData.is_available}
-                  onChange={handleChange}
-                />
-                <label htmlFor="is_available">Available</label>
+              <div className="section-header-row">
+                <h3 className="section-heading">Menu Items</h3>
+                <button type="button" className="add-item-btn" onClick={addMenuItem}>
+                  + Add Menu Item
+                </button>
               </div>
+
+              {menuItems.map((item, index) => (
+                <div key={index} className="menu-item-card">
+                  <div className="menu-item-card-header">
+                    <span className="menu-item-label">Item {index + 1}</span>
+                    {menuItems.length > 1 && (
+                      <button
+                        type="button"
+                        className="remove-item-btn"
+                        onClick={() => removeMenuItem(index)}
+                      >
+                        Remove
+                      </button>
+                    )}
+                  </div>
+
+                  <label htmlFor={`menuName-${index}`}>Menu Name</label>
+                  <input
+                    id={`menuName-${index}`}
+                    name="menuName"
+                    type="text"
+                    value={item.menuName}
+                    onChange={(e) => handleMenuItemChange(index, e)}
+                    required
+                  />
+
+                  <label htmlFor={`description-${index}`}>Description</label>
+                  <textarea
+                    id={`description-${index}`}
+                    name="description"
+                    rows={3}
+                    value={item.description}
+                    onChange={(e) => handleMenuItemChange(index, e)}
+                    required
+                  />
+
+                  <label htmlFor={`price-${index}`}>Price (XAF)</label>
+                  <input
+                    id={`price-${index}`}
+                    name="price"
+                    type="number"
+                    min="0"
+                    step="1"
+                    value={item.price}
+                    onChange={(e) => handleMenuItemChange(index, e)}
+                    required
+                  />
+
+                  <div className="checkbox-row">
+                    <input
+                      id={`is_available-${index}`}
+                      name="is_available"
+                      type="checkbox"
+                      checked={item.is_available}
+                      onChange={(e) => handleMenuItemChange(index, e)}
+                    />
+                    <label htmlFor={`is_available-${index}`}>Available</label>
+                  </div>
+                </div>
+              ))}
 
               <div className="form-actions">
                 <button type="submit" className="primary-btn" disabled={isSubmitting}>
