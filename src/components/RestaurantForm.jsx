@@ -2,15 +2,18 @@ import { useState } from 'react'
 import MenuItemCard from './MenuItemCard'
 import { doualaAreas, initialFormData, initialMenuItem } from '../constants'
 import { uploadToCloudinary, createRestaurant, createMenuItems } from '../api'
-
-function RestaurantForm({ onBack }) {
+import { useNavigate } from "react-router-dom";
+import '../App.css'
+function RestaurantForm() {
   const [formData, setFormData] = useState(initialFormData)
   const [menuItems, setMenuItems] = useState([{ ...initialMenuItem }])
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitMessage, setSubmitMessage] = useState('')
+  const [successMessage, setSuccessMessage] = useState('')
 
-  const handleChange = (event) => {
-    const { name, value, type, checked, files } = event.target
+      const navigate = useNavigate();
+      const handleChange = (event) => {
+      const { name, value, type, checked, files } = event.target
 
     if (name === 'image') {
       setFormData((prev) => ({ ...prev, image: files?.[0] ?? null }))
@@ -46,6 +49,7 @@ function RestaurantForm({ onBack }) {
   const handleSubmit = async (event) => {
     event.preventDefault()
     setSubmitMessage('')
+    setSuccessMessage('')
 
     const cloudName = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME
     const uploadPreset = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET
@@ -85,17 +89,30 @@ function RestaurantForm({ onBack }) {
 
       setFormData(initialFormData)
       setMenuItems([{ ...initialMenuItem }])
-      onBack()
+      
     } catch (error) {
       setSubmitMessage(error.message || 'Submission failed. Please try again.')
     } finally {
       setIsSubmitting(false)
+      setSuccessMessage('Restaurant and menu items added successfully!')
     }
   }
 
+ 
+
+  const onBack = () => {
+    navigate(-1);
+  }
+
   return (
-    <section className="form-page">
-      <h2>Add Data Form</h2>
+    <section className="container form-page">
+        <div className="addform">
+            <h1>Add Restaurant and Menu Items</h1>
+            <button type="button" className="btn btn-secondary" onClick={onBack}>
+                Back
+            </button>
+        </div>
+       
       <form className="data-form" onSubmit={handleSubmit}>
         <label htmlFor="restaurantName">Restaurant Name</label>
         <input
@@ -230,15 +247,14 @@ function RestaurantForm({ onBack }) {
         ))}
 
         <div className="form-actions">
-          <button type="submit" className="primary-btn" disabled={isSubmitting}>
+          <button type="submit" className="btn btn-primary" disabled={isSubmitting}>
             {isSubmitting ? 'Uploading...' : 'Save'}
           </button>
-          <button type="button" className="secondary-btn" onClick={onBack}>
-            Back
-          </button>
+        
         </div>
 
         {submitMessage && <p className="form-message">{submitMessage}</p>}
+        {successMessage && <p className="form-success-message">{successMessage}</p>}
       </form>
     </section>
   )

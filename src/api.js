@@ -69,14 +69,15 @@ export async function getRestaurants() {
   return response.json();
 }
 
-export async function getMenusByRestaurant(restaurantId) {
-  const response = await fetch(
-    `${API_BASE}/api/menus?restaurant_id=${restaurantId}`,
-  );
+export async function getRestaurantsWithMenus() {
+  const response = await fetch(`${API_BASE}/api/restaurants/with-menus`);
   if (!response.ok) {
-    throw new Error(`Failed to fetch menus (${response.status})`);
+    throw new Error(
+      `Failed to fetch restaurants with menus (${response.status})`,
+    );
   }
-  return response.json();
+  const data = await response.json();
+  return data;
 }
 
 export async function deleteRestaurant(id) {
@@ -89,7 +90,7 @@ export async function deleteRestaurant(id) {
 }
 
 export async function deleteMenuItem(id) {
-  const response = await fetch(`${API_BASE}/api/menus/items/${id}`, {
+  const response = await fetch(`${API_BASE}/api/menus/${id}`, {
     method: "DELETE",
   });
   if (!response.ok) {
@@ -113,8 +114,8 @@ export async function updateRestaurant(id, payload) {
 }
 
 export async function updateMenuItem(id, payload) {
-  const response = await fetch(`${API_BASE}/api/menus/items/${id}`, {
-    method: "PATCH",
+  const response = await fetch(`${API_BASE}/api/menus/${id}`, {
+    method: "PUT",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(payload),
   });
