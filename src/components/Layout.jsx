@@ -11,10 +11,10 @@ function Layout() {
             Home
           </NavLink>
           <NavLink to="/add" className={({ isActive }) => `sidebar-link${isActive ? ' active' : ''}`}>
-            Add Restaurant
+            Add a New Restaurant and Menu Items
           </NavLink>
           <NavLink to="/edit" className={({ isActive }) => `sidebar-link${isActive ? ' active' : ''}`}>
-            Edit Data
+            View and Edit Restaurants and Menus
           </NavLink>
         </nav>
       </aside>
