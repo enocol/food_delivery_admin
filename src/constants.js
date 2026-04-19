@@ -44,6 +44,7 @@ export const initialMenuItem = {
   description: "",
   price: "",
   is_available: true,
+  image: null,
 };
 
 export const initialFormData = {

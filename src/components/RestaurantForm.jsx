@@ -2,7 +2,6 @@ import { useState } from 'react'
 import MenuItemCard from './MenuItemCard'
 import { doualaAreas, initialFormData, initialMenuItem } from '../constants'
 import { uploadToCloudinary, createRestaurant, createMenuItems } from '../api'
-import { useNavigate } from "react-router-dom";
 import '../App.css'
 function RestaurantForm() {
   const [formData, setFormData] = useState(initialFormData)
@@ -11,12 +10,14 @@ function RestaurantForm() {
   const [submitMessage, setSubmitMessage] = useState('')
   const [successMessage, setSuccessMessage] = useState('')
 
-      const navigate = useNavigate();
       const handleChange = (event) => {
       const { name, value, type, checked, files } = event.target
 
     if (name === 'image') {
+      console.log('selected files:', files)
+      console.log('first file:', files?.[0])
       setFormData((prev) => ({ ...prev, image: files?.[0] ?? null }))
+      
       return
     }
 
@@ -33,11 +34,13 @@ function RestaurantForm() {
   }
 
   const handleMenuItemChange = (index, event) => {
-    const { name, value, type, checked } = event.target
+    const { name, value, type, checked, files } = event.target
     setMenuItems((prev) =>
-      prev.map((item, i) =>
-        i === index ? { ...item, [name]: type === 'checkbox' ? checked : value } : item
-      )
+      prev.map((item, i) => {
+        if (i !== index) return item
+        if (name === 'image') return { ...item, image: files?.[0] ?? null }
+        return { ...item, [name]: type === 'checkbox' ? checked : value }
+      })
     )
   }
 
@@ -60,6 +63,8 @@ function RestaurantForm() {
       )
       return
     }
+
+    console.log('Submitting form with data:', formData, 'and menu items:', menuItems)
 
     if (!formData.image) {
       setSubmitMessage('Please select an image before submitting.')
@@ -85,7 +90,17 @@ function RestaurantForm() {
       const restaurantData = await createRestaurant(restaurantPayload)
       const restaurantId = restaurantData.restaurant.id
 
-      await createMenuItems(restaurantId, menuItems)
+      const menuItemsWithImages = await Promise.all(
+        menuItems.map(async (item) => {
+          let image_url = null
+          if (item.image) {
+            image_url = await uploadToCloudinary(item.image, cloudName, uploadPreset)
+          }
+          return { ...item, image_url }
+        })
+      )
+
+      await createMenuItems(restaurantId, menuItemsWithImages)
 
       setFormData(initialFormData)
       setMenuItems([{ ...initialMenuItem }])
@@ -100,17 +115,10 @@ function RestaurantForm() {
 
  
 
-  const onBack = () => {
-    navigate(-1);
-  }
-
   return (
-    <section className="container form-page">
-        <div className="addform">
+    <section className="form-page">
+        <div className="page-header">
             <h1>Add Restaurant and Menu Items</h1>
-            <button type="button" className="btn btn-secondary" onClick={onBack}>
-                Back
-            </button>
         </div>
        
       <form className="data-form" onSubmit={handleSubmit}>

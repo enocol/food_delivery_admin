@@ -2,6 +2,7 @@ const API_BASE = import.meta.env.VITE_API_BASE_URL;
 
 export async function uploadToCloudinary(file, cloudName, uploadPreset) {
   const body = new FormData();
+
   body.append("file", file);
   body.append("upload_preset", uploadPreset);
 
@@ -47,6 +48,7 @@ export async function createMenuItems(restaurantId, items) {
           description: item.description,
           price: Number(item.price),
           is_available: item.is_available,
+          image_url: item.image_url ?? null,
         }),
       }),
     ),
@@ -80,50 +82,50 @@ export async function getRestaurantsWithMenus() {
   return data;
 }
 
-export async function deleteRestaurant(id) {
-  const response = await fetch(`${API_BASE}/api/restaurants/${id}`, {
-    method: "DELETE",
-  });
-  if (!response.ok) {
-    throw new Error(`Failed to delete restaurant (${response.status})`);
-  }
-}
+// export async function deleteRestaurant(id) {
+//   const response = await fetch(`${API_BASE}/api/restaurants/${id}`, {
+//     method: "DELETE",
+//   });
+//   if (!response.ok) {
+//     throw new Error(`Failed to delete restaurant (${response.status})`);
+//   }
+// }
 
-export async function deleteMenuItem(id) {
-  const response = await fetch(`${API_BASE}/api/menus/${id}`, {
-    method: "DELETE",
-  });
-  if (!response.ok) {
-    throw new Error(`Failed to delete menu item (${response.status})`);
-  }
-}
+// export async function deleteMenuItem(id) {
+//   const response = await fetch(`${API_BASE}/api/menus/${id}`, {
+//     method: "DELETE",
+//   });
+//   if (!response.ok) {
+//     throw new Error(`Failed to delete menu item (${response.status})`);
+//   }
+// }
 
-export async function updateRestaurant(id, payload) {
-  const response = await fetch(`${API_BASE}/api/restaurants/${id}`, {
-    method: "PUT",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(payload),
-  });
-  if (!response.ok) {
-    const errorText = await response.text();
-    throw new Error(
-      `Failed to update restaurant (${response.status}): ${errorText || "Unknown error"}`,
-    );
-  }
-  return response.json();
-}
+// export async function updateRestaurant(id, payload) {
+//   const response = await fetch(`${API_BASE}/api/restaurants/${id}`, {
+//     method: "PUT",
+//     headers: { "Content-Type": "application/json" },
+//     body: JSON.stringify(payload),
+//   });
+//   if (!response.ok) {
+//     const errorText = await response.text();
+//     throw new Error(
+//       `Failed to update restaurant (${response.status}): ${errorText || "Unknown error"}`,
+//     );
+//   }
+//   return response.json();
+// }
 
-export async function updateMenuItem(id, payload) {
-  const response = await fetch(`${API_BASE}/api/menus/${id}`, {
-    method: "PUT",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(payload),
-  });
-  if (!response.ok) {
-    const errorText = await response.text();
-    throw new Error(
-      `Failed to update menu item (${response.status}): ${errorText || "Unknown error"}`,
-    );
-  }
-  return response.json();
-}
+// export async function updateMenuItem(id, payload) {
+//   const response = await fetch(`${API_BASE}/api/menus/${id}`, {
+//     method: "PUT",
+//     headers: { "Content-Type": "application/json" },
+//     body: JSON.stringify(payload),
+//   });
+//   if (!response.ok) {
+//     const errorText = await response.text();
+//     throw new Error(
+//       `Failed to update menu item (${response.status}): ${errorText || "Unknown error"}`,
+//     );
+//   }
+//   return response.json();
+// }

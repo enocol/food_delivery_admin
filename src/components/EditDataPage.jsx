@@ -1,16 +1,15 @@
 import { useState, useEffect, Fragment } from 'react'
 import {
   getRestaurantsWithMenus,
-  deleteRestaurant,
-  deleteMenuItem,
-  updateRestaurant,
-  updateMenuItem,
+  // deleteRestaurant,
+  // deleteMenuItem,
+  // updateRestaurant,
+  // updateMenuItem,
   uploadToCloudinary,
 } from '../api'
 import { doualaAreas } from '../constants'
 import RestaurantForm from './RestaurantForm'
 import '../App.css'
-import { useNavigate } from "react-router-dom";
 
 function EditDataPage() {
   const [restaurants, setRestaurants] = useState([])
@@ -53,11 +52,7 @@ function EditDataPage() {
   console.log('data:', restaurants
   )
 
-  const navigate = useNavigate();
 
-  const onBack = () => {
-    navigate(-1);
-  }
 
 if (loading) {
   return <p className="loading-text edit-data-page">Loading…........................................</p>
@@ -68,23 +63,17 @@ if (restaurants.length === 0) {
     <section className="edit-data-page">
 
 
-      <div className="">
+      <div className="page-header">
         <h2>All Restaurants</h2>
-        <button type="button" className="btn btn-primary" onClick={onBack}>
-          ← Back
-        </button>
       </div>
       <p className="no-data-text">No restaurants found. Please add some restaurants first.</p>
     </section>
   )
 }
   return (
-  <div className="container">
-   <div className="addform">
+  <div>
+   <div className="page-header">
      <h1>View and Edit Restaurants</h1>
-    <button type="button" className="btn btn-secondary" onClick={onBack}>
-      ← Back
-    </button>
    </div>
   
     <div className='card-container'>

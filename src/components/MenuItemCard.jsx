@@ -42,6 +42,15 @@ function MenuItemCard({ item, index, totalItems, onChange, onRemove }) {
         required
       />
 
+      <label htmlFor={`image-${index}`}>Image</label>
+      <input
+        id={`image-${index}`}
+        name="image"
+        type="file"
+        accept="image/*"
+        onChange={onChange}
+      />
+
       <div className="checkbox-row">
         <input
           id={`is_available-${index}`}
