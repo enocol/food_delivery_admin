@@ -10,6 +10,7 @@ import {
 import { doualaAreas } from '../constants'
 import RestaurantForm from './RestaurantForm'
 import '../App.css'
+import { useNavigate } from 'react-router-dom'
 
 function EditDataPage() {
   const [restaurants, setRestaurants] = useState([])
@@ -18,6 +19,7 @@ function EditDataPage() {
   const [modal, setModal] = useState(null) // { type: 'restaurant' | 'menuItem', data: {} }
   const [saving, setSaving] = useState(false)
   const [modalError, setModalError] = useState('')
+  const navigate = useNavigate()
 
 
 
@@ -78,7 +80,7 @@ if (restaurants.length === 0) {
   
     <div className='card-container'>
       {restaurants.map((restaurant) => (
-        <div key={restaurant.id} className="card"  >
+        <div key={restaurant.id} className="card" onClick={() => navigate(`/restaurant/${restaurant.id}`)} style={{ cursor: 'pointer' }}>
           <img src={restaurant.imageUrl} style={{width: "18rem", height: "18rem", objectFit: "cover"}} className="card-img-top" alt="..."/>
           <div className="card-body">
             <div className='title-container'>
@@ -88,8 +90,6 @@ if (restaurants.length === 0) {
             <p className="card-text">{restaurant.cuisine}</p>
             <p className="card-text">{restaurant.deliveryTimeMinutes}Minutes</p>
             <p className="card-text">{restaurant.deliveryFee}</p>
-            
-            <a href="#" className="btn btn-primary">Edit</a>
           </div>
       </div>
       
