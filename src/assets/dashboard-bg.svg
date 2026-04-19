@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="900" viewBox="0 0 1440 900">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#f4f1eb;stop-opacity:1"/>
+      <stop offset="50%" style="stop-color:#eee9df;stop-opacity:1"/>
+      <stop offset="100%" style="stop-color:#f0ece4;stop-opacity:1"/>
+    </linearGradient>
+    <linearGradient id="warm1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#daa520;stop-opacity:0.10"/>
+      <stop offset="100%" style="stop-color:#daa520;stop-opacity:0.03"/>
+    </linearGradient>
+    <linearGradient id="warm2" x1="100%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#1f2937;stop-opacity:0.06"/>
+      <stop offset="100%" style="stop-color:#1f2937;stop-opacity:0.02"/>
+    </linearGradient>
+  </defs>
+  <rect width="1440" height="900" fill="url(#bg)"/>
+  <!-- Soft blobs -->
+  <circle cx="180" cy="120" r="280" fill="url(#warm1)"/>
+  <circle cx="1250" cy="750" r="320" fill="url(#warm1)"/>
+  <circle cx="720" cy="450" r="220" fill="url(#warm2)"/>
+  <!-- Subtle food icons pattern -->
+  <g opacity="0.045" fill="#1f2937">
+    <!-- Fork icons -->
+    <g transform="translate(100,250)"><rect x="0" y="0" width="3" height="28" rx="1.5"/><rect x="6" y="0" width="3" height="28" rx="1.5"/><rect x="12" y="0" width="3" height="28" rx="1.5"/><rect x="0" y="26" width="15" height="4" rx="2"/><rect x="5" y="30" width="5" height="18" rx="2.5"/></g>
+    <g transform="translate(400,600)"><rect x="0" y="0" width="3" height="28" rx="1.5"/><rect x="6" y="0" width="3" height="28" rx="1.5"/><rect x="12" y="0" width="3" height="28" rx="1.5"/><rect x="0" y="26" width="15" height="4" rx="2"/><rect x="5" y="30" width="5" height="18" rx="2.5"/></g>
+    <g transform="translate(1100,180)"><rect x="0" y="0" width="3" height="28" rx="1.5"/><rect x="6" y="0" width="3" height="28" rx="1.5"/><rect x="12" y="0" width="3" height="28" rx="1.5"/><rect x="0" y="26" width="15" height="4" rx="2"/><rect x="5" y="30" width="5" height="18" rx="2.5"/></g>
+    <!-- Plate circles -->
+    <circle cx="300" cy="450" r="30" fill="none" stroke="#1f2937" stroke-width="3"/>
+    <circle cx="300" cy="450" r="20" fill="none" stroke="#1f2937" stroke-width="1.5"/>
+    <circle cx="800" cy="200" r="30" fill="none" stroke="#1f2937" stroke-width="3"/>
+    <circle cx="800" cy="200" r="20" fill="none" stroke="#1f2937" stroke-width="1.5"/>
+    <circle cx="1200" cy="550" r="30" fill="none" stroke="#1f2937" stroke-width="3"/>
+    <circle cx="1200" cy="550" r="20" fill="none" stroke="#1f2937" stroke-width="1.5"/>
+    <!-- Delivery box shapes -->
+    <rect x="550" y="700" width="40" height="30" rx="4" fill="none" stroke="#1f2937" stroke-width="2.5"/>
+    <line x1="550" y1="710" x2="590" y2="710" stroke="#1f2937" stroke-width="2"/>
+    <rect x="950" y="350" width="40" height="30" rx="4" fill="none" stroke="#1f2937" stroke-width="2.5"/>
+    <line x1="950" y1="360" x2="990" y2="360" stroke="#1f2937" stroke-width="2"/>
+    <!-- Small stars -->
+    <polygon points="650,100 653,110 663,110 655,116 658,126 650,120 642,126 645,116 637,110 647,110"/>
+    <polygon points="1050,700 1053,710 1063,710 1055,716 1058,726 1050,720 1042,726 1045,716 1037,710 1047,710"/>
+    <polygon points="200,750 203,760 213,760 205,766 208,776 200,770 192,776 195,766 187,760 197,760"/>
+  </g>
+  <!-- Dot grid -->
+  <g fill="#daa520" opacity="0.07">
+    <circle cx="80" cy="80" r="2.5"/><circle cx="180" cy="80" r="2.5"/><circle cx="280" cy="80" r="2.5"/><circle cx="380" cy="80" r="2.5"/><circle cx="480" cy="80" r="2.5"/><circle cx="580" cy="80" r="2.5"/><circle cx="680" cy="80" r="2.5"/><circle cx="780" cy="80" r="2.5"/><circle cx="880" cy="80" r="2.5"/><circle cx="980" cy="80" r="2.5"/><circle cx="1080" cy="80" r="2.5"/><circle cx="1180" cy="80" r="2.5"/><circle cx="1280" cy="80" r="2.5"/><circle cx="1380" cy="80" r="2.5"/>
+    <circle cx="80" cy="180" r="2.5"/><circle cx="180" cy="180" r="2.5"/><circle cx="280" cy="180" r="2.5"/><circle cx="380" cy="180" r="2.5"/><circle cx="480" cy="180" r="2.5"/><circle cx="580" cy="180" r="2.5"/><circle cx="680" cy="180" r="2.5"/><circle cx="780" cy="180" r="2.5"/><circle cx="880" cy="180" r="2.5"/><circle cx="980" cy="180" r="2.5"/><circle cx="1080" cy="180" r="2.5"/><circle cx="1180" cy="180" r="2.5"/><circle cx="1280" cy="180" r="2.5"/><circle cx="1380" cy="180" r="2.5"/>
+    <circle cx="80" cy="280" r="2.5"/><circle cx="180" cy="280" r="2.5"/><circle cx="280" cy="280" r="2.5"/><circle cx="380" cy="280" r="2.5"/><circle cx="480" cy="280" r="2.5"/><circle cx="580" cy="280" r="2.5"/><circle cx="680" cy="280" r="2.5"/><circle cx="780" cy="280" r="2.5"/><circle cx="880" cy="280" r="2.5"/><circle cx="980" cy="280" r="2.5"/><circle cx="1080" cy="280" r="2.5"/><circle cx="1180" cy="280" r="2.5"/><circle cx="1280" cy="280" r="2.5"/><circle cx="1380" cy="280" r="2.5"/>
+    <circle cx="80" cy="380" r="2.5"/><circle cx="180" cy="380" r="2.5"/><circle cx="280" cy="380" r="2.5"/><circle cx="380" cy="380" r="2.5"/><circle cx="480" cy="380" r="2.5"/><circle cx="580" cy="380" r="2.5"/><circle cx="680" cy="380" r="2.5"/><circle cx="780" cy="380" r="2.5"/><circle cx="880" cy="380" r="2.5"/><circle cx="980" cy="380" r="2.5"/><circle cx="1080" cy="380" r="2.5"/><circle cx="1180" cy="380" r="2.5"/><circle cx="1280" cy="380" r="2.5"/><circle cx="1380" cy="380" r="2.5"/>
+    <circle cx="80" cy="480" r="2.5"/><circle cx="180" cy="480" r="2.5"/><circle cx="280" cy="480" r="2.5"/><circle cx="380" cy="480" r="2.5"/><circle cx="480" cy="480" r="2.5"/><circle cx="580" cy="480" r="2.5"/><circle cx="680" cy="480" r="2.5"/><circle cx="780" cy="480" r="2.5"/><circle cx="880" cy="480" r="2.5"/><circle cx="980" cy="480" r="2.5"/><circle cx="1080" cy="480" r="2.5"/><circle cx="1180" cy="480" r="2.5"/><circle cx="1280" cy="480" r="2.5"/><circle cx="1380" cy="480" r="2.5"/>
+    <circle cx="80" cy="580" r="2.5"/><circle cx="180" cy="580" r="2.5"/><circle cx="280" cy="580" r="2.5"/><circle cx="380" cy="580" r="2.5"/><circle cx="480" cy="580" r="2.5"/><circle cx="580" cy="580" r="2.5"/><circle cx="680" cy="580" r="2.5"/><circle cx="780" cy="580" r="2.5"/><circle cx="880" cy="580" r="2.5"/><circle cx="980" cy="580" r="2.5"/><circle cx="1080" cy="580" r="2.5"/><circle cx="1180" cy="580" r="2.5"/><circle cx="1280" cy="580" r="2.5"/><circle cx="1380" cy="580" r="2.5"/>
+    <circle cx="80" cy="680" r="2.5"/><circle cx="180" cy="680" r="2.5"/><circle cx="280" cy="680" r="2.5"/><circle cx="380" cy="680" r="2.5"/><circle cx="480" cy="680" r="2.5"/><circle cx="580" cy="680" r="2.5"/><circle cx="680" cy="680" r="2.5"/><circle cx="780" cy="680" r="2.5"/><circle cx="880" cy="680" r="2.5"/><circle cx="980" cy="680" r="2.5"/><circle cx="1080" cy="680" r="2.5"/><circle cx="1180" cy="680" r="2.5"/><circle cx="1280" cy="680" r="2.5"/><circle cx="1380" cy="680" r="2.5"/>
+    <circle cx="80" cy="780" r="2.5"/><circle cx="180" cy="780" r="2.5"/><circle cx="280" cy="780" r="2.5"/><circle cx="380" cy="780" r="2.5"/><circle cx="480" cy="780" r="2.5"/><circle cx="580" cy="780" r="2.5"/><circle cx="680" cy="780" r="2.5"/><circle cx="780" cy="780" r="2.5"/><circle cx="880" cy="780" r="2.5"/><circle cx="980" cy="780" r="2.5"/><circle cx="1080" cy="780" r="2.5"/><circle cx="1180" cy="780" r="2.5"/><circle cx="1280" cy="780" r="2.5"/><circle cx="1380" cy="780" r="2.5"/>
+  </g>
+  <!-- Bottom wave -->
+  <path d="M0 750 Q 360 680, 720 740 T 1440 720 L1440 900 L0 900 Z" fill="#daa520" opacity="0.05"/>
+  <path d="M0 800 Q 400 740, 800 790 T 1440 770 L1440 900 L0 900 Z" fill="#1f2937" opacity="0.03"/>
+</svg>

@@ -11,6 +11,7 @@ import { doualaAreas } from '../constants'
 import RestaurantForm from './RestaurantForm'
 import '../App.css'
 import { useNavigate } from 'react-router-dom'
+import dashboardBg from '../assets/dashboard-bg.svg'
 
 function EditDataPage() {
   const [restaurants, setRestaurants] = useState([])
@@ -73,7 +74,7 @@ if (restaurants.length === 0) {
   )
 }
   return (
-  <div>
+  <div style={{ backgroundImage: `url(${dashboardBg})`, backgroundSize: 'cover', backgroundPosition: 'center', backgroundRepeat: 'no-repeat', minHeight: 'calc(100vh - 48px)', backgroundAttachment: 'fixed' }}>
    <div className="page-header">
      <h1>View and Edit Restaurants</h1>
    </div>

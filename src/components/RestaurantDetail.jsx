@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import { getRestaurantsWithMenus, createMenuItems, uploadToCloudinary } from '../api'
+import { getRestaurantsWithMenus, createMenuItems, uploadToCloudinary, deleteMenuItem, updateMenuItem } from '../api'
 import { initialMenuItem } from '../constants'
 import '../App.css'
 
@@ -14,6 +14,10 @@ function RestaurantDetail() {
   const [modalItems, setModalItems] = useState([{ ...initialMenuItem }])
   const [submitting, setSubmitting] = useState(false)
   const [modalError, setModalError] = useState('')
+  const [editModal, setEditModal] = useState(null) // menu item being edited
+  const [editForm, setEditForm] = useState({ menuName: '', description: '', price: '', is_available: true, image: null })
+  const [editSubmitting, setEditSubmitting] = useState(false)
+  const [editError, setEditError] = useState('')
 
   async function loadRestaurant() {
     try {
@@ -87,6 +91,65 @@ function RestaurantDetail() {
     setShowModal(true)
   }
 
+  const openEditModal = (item) => {
+    setEditForm({
+      menuName: item.menuName || item.name || '',
+      description: item.description || '',
+      price: item.price ?? '',
+      is_available: item.isAvailable ?? item.is_available ?? true,
+      image: null,
+    })
+    setEditError('')
+    setEditModal(item)
+  }
+
+  const handleEditChange = (e) => {
+    const { name, value, type, checked, files } = e.target
+    if (name === 'image') {
+      setEditForm((prev) => ({ ...prev, image: files?.[0] ?? null }))
+      return
+    }
+    setEditForm((prev) => ({ ...prev, [name]: type === 'checkbox' ? checked : value }))
+  }
+
+  const handleEditSubmit = async (e) => {
+    e.preventDefault()
+    setEditError('')
+    const cloudName = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME
+    const uploadPreset = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET
+
+    try {
+      setEditSubmitting(true)
+      let image_url = editModal.imageUrl || editModal.image_url || null
+      if (editForm.image) {
+        image_url = await uploadToCloudinary(editForm.image, cloudName, uploadPreset)
+      }
+      await updateMenuItem(editModal.id, {
+        menu_name: editForm.menuName,
+        description: editForm.description,
+        price: Number(editForm.price),
+        is_available: editForm.is_available,
+        image_url,
+      })
+      setEditModal(null)
+      await loadRestaurant()
+    } catch (err) {
+      setEditError(err.message || 'Failed to update menu item')
+    } finally {
+      setEditSubmitting(false)
+    }
+  }
+
+  const handleDeleteMenuItem = async (itemId) => {
+    if (!window.confirm('Are you sure you want to delete this menu item?')) return
+    try {
+      await deleteMenuItem(itemId)
+      await loadRestaurant()
+    } catch (err) {
+      alert(err.message || 'Failed to delete menu item')
+    }
+  }
+
   if (loading) return <p className="loading-text">Loading…</p>
   if (error) return <p className="form-message">{error}</p>
   if (!restaurant) return null
@@ -141,6 +204,10 @@ function RestaurantDetail() {
                   <span className={`status-badge small ${item.isAvailable || item.is_available ? 'badge-open' : 'badge-closed'}`}>
                     {item.isAvailable || item.is_available ? 'Available' : 'Unavailable'}
                   </span>
+                </div>
+                <div className="detail-menu-actions">
+                  <button type="button" className="btn btn-sm btn-outline-primary" onClick={() => openEditModal(item)}>Edit</button>
+                  <button type="button" className="btn btn-sm btn-outline-danger" onClick={() => handleDeleteMenuItem(item.id)}>Delete</button>
                 </div>
               </div>
             </div>
@@ -200,6 +267,49 @@ function RestaurantDetail() {
                   {submitting ? 'Saving…' : 'Save Menu Items'}
                 </button>
                 <button type="button" className="btn btn-secondary" onClick={() => setShowModal(false)}>
+                  Cancel
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {editModal && (
+        <div className="modal-overlay" onClick={() => setEditModal(null)}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h2>Edit Menu Item</h2>
+              <button type="button" className="modal-close-btn" onClick={() => setEditModal(null)}>
+                ✕
+              </button>
+            </div>
+
+            <form className="modal-form" onSubmit={handleEditSubmit}>
+              <label htmlFor="edit-menuName">Menu Name</label>
+              <input id="edit-menuName" name="menuName" type="text" value={editForm.menuName} onChange={handleEditChange} required />
+
+              <label htmlFor="edit-description">Description</label>
+              <textarea id="edit-description" name="description" rows={2} value={editForm.description} onChange={handleEditChange} required />
+
+              <label htmlFor="edit-price">Price (XAF)</label>
+              <input id="edit-price" name="price" type="number" min="0" step="1" value={editForm.price} onChange={handleEditChange} required />
+
+              <label htmlFor="edit-image">Image (leave empty to keep current)</label>
+              <input id="edit-image" name="image" type="file" accept="image/*" onChange={handleEditChange} />
+
+              <div className="checkbox-row">
+                <input id="edit-is_available" name="is_available" type="checkbox" checked={editForm.is_available} onChange={handleEditChange} />
+                <label htmlFor="edit-is_available">Available</label>
+              </div>
+
+              {editError && <p className="form-message">{editError}</p>}
+
+              <div className="form-actions">
+                <button type="submit" className="btn btn-primary" disabled={editSubmitting}>
+                  {editSubmitting ? 'Saving…' : 'Update'}
+                </button>
+                <button type="button" className="btn btn-secondary" onClick={() => setEditModal(null)}>
                   Cancel
                 </button>
               </div>

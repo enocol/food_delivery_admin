@@ -2,6 +2,7 @@ import { useState } from 'react'
 import MenuItemCard from './MenuItemCard'
 import { doualaAreas, initialFormData, initialMenuItem } from '../constants'
 import { uploadToCloudinary, createRestaurant, createMenuItems } from '../api'
+import dashboardBg from '../assets/dashboard-bg.svg'
 import '../App.css'
 function RestaurantForm() {
   const [formData, setFormData] = useState(initialFormData)
@@ -116,7 +117,7 @@ function RestaurantForm() {
  
 
   return (
-    <section className="form-page">
+    <section className="form-page" style={{ backgroundImage: `url(${dashboardBg})`, backgroundSize: 'cover', backgroundPosition: 'center', backgroundRepeat: 'no-repeat', minHeight: 'calc(100vh - 48px)' }}>
         <div className="page-header">
             <h1>Add Restaurant and Menu Items</h1>
         </div>
