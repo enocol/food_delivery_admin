@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { auth } from "../firebase";
+import { syncAuthUser } from "../api";
 
 export default function SignupPage() {
   const [firstName, setFirstName] = useState("");
@@ -13,6 +14,16 @@ export default function SignupPage() {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
+  function handleInputChange(e) {
+    const { name, value } = e.target;
+
+    if (name === "firstName") setFirstName(value);
+    if (name === "lastName") setLastName(value);
+    if (name === "email") setEmail(value);
+    if (name === "password") setPassword(value);
+    if (name === "confirmPassword") setConfirmPassword(value);
+  }
+
   async function handleSubmit(e) {
     e.preventDefault();
     setError("");
@@ -23,7 +34,20 @@ export default function SignupPage() {
     try {
       const { user } = await createUserWithEmailAndPassword(auth, email, password);
       await updateProfile(user, { displayName: `${firstName} ${lastName}` });
-      navigate("/");
+
+      const idToken = await user.getIdToken(true);
+      await syncAuthUser(
+        {
+          uid: user.uid,
+          email: user.email,
+          first_name: firstName,
+          last_name: lastName,
+          name: `${firstName} ${lastName}`,
+        },
+        idToken,
+      );
+
+      navigate("/login");
     } catch (err) {
       setError(err.message || "Failed to create account");
     } finally {
@@ -42,9 +66,10 @@ export default function SignupPage() {
             <label htmlFor="firstName">First Name</label>
             <input
               id="firstName"
+              name="firstName"
               type="text"
               value={firstName}
-              onChange={(e) => setFirstName(e.target.value)}
+              onChange={handleInputChange}
               required
             />
           </div>
@@ -52,9 +77,10 @@ export default function SignupPage() {
             <label htmlFor="lastName">Last Name</label>
             <input
               id="lastName"
+              name="lastName"
               type="text"
               value={lastName}
-              onChange={(e) => setLastName(e.target.value)}
+              onChange={handleInputChange}
               required
             />
           </div>
@@ -62,9 +88,10 @@ export default function SignupPage() {
             <label htmlFor="email">Email</label>
             <input
               id="email"
+              name="email"
               type="email"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={handleInputChange}
               required
             />
           </div>
@@ -72,9 +99,10 @@ export default function SignupPage() {
             <label htmlFor="password">Password</label>
             <input
               id="password"
+              name="password"
               type="password"
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={handleInputChange}
               required
               minLength={6}
             />
@@ -83,9 +111,10 @@ export default function SignupPage() {
             <label htmlFor="confirmPassword">Confirm Password</label>
             <input
               id="confirmPassword"
+              name="confirmPassword"
               type="password"
               value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
+              onChange={handleInputChange}
               required
               minLength={6}
             />

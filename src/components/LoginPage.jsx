@@ -16,7 +16,7 @@ export default function LoginPage() {
     setLoading(true);
     try {
       await login(email, password);
-      navigate("/");
+      navigate("/", { replace: true });
     } catch (err) {
       setError(err.message || "Failed to sign in");
     } finally {
@@ -29,7 +29,7 @@ export default function LoginPage() {
       <div className="login-card">
         <h2>Mbolo Eats Admin</h2>
         <p className="login-subtitle">Sign in to your account</p>
-        {error && <div className="login-error">{error}</div>}
+        {error && <div className="login-error">Invalid email or password</div>}
         <form onSubmit={handleSubmit}>
           <div className="login-field">
             <label htmlFor="email">Email</label>

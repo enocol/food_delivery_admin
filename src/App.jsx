@@ -17,13 +17,20 @@ function ProtectedRoute({ children }) {
   return children;
 }
 
+function PublicOnlyRoute({ children }) {
+  const { user, loading } = useAuth();
+  if (loading) return <div className="loading-screen">Loading...</div>;
+  if (user) return <Navigate to="/" replace />;
+  return children;
+}
+
 function App() {
   return (
     <BrowserRouter>
       <AuthProvider>
         <Routes>
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/signup" element={<SignupPage />} />
+          <Route path="/login" element={<PublicOnlyRoute><LoginPage /></PublicOnlyRoute>} />
+          <Route path="/signup" element={<PublicOnlyRoute><SignupPage /></PublicOnlyRoute>} />
           <Route element={<ProtectedRoute><Layout /></ProtectedRoute>}>
             <Route path="/" element={<Home />} />
             <Route path="/add" element={<RestaurantForm />} />

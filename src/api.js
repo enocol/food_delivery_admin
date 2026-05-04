@@ -155,3 +155,26 @@ export async function getOrderSummary(orderId) {
   }
   return response.json();
 }
+
+export async function syncAuthUser(payload, idToken) {
+  const token = idToken || (await auth.currentUser?.getIdToken(true));
+  if (!token) {
+    throw new Error("Missing auth token for user sync");
+  }
+
+  const response = await fetch(`${API_BASE}/api/auth/sync`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(payload),
+  });
+
+  if (!response.ok) {
+    const errorText = await response.text();
+    throw new Error(errorText || "Failed to sync user to database");
+  }
+
+  return response.json();
+}
