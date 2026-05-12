@@ -6,7 +6,7 @@ import OrdersPage from './components/OrdersPage'
 import LoginPage from './components/LoginPage'
 import SignupPage from './components/SignupPage'
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
-import Home from './components/Home'
+import Home from './components/home'
 import Layout from './components/Layout'
 import { AuthProvider, useAuth } from './components/AuthContext'
 
